@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "89ht3A7hK9WPAPBQ4Q7hdzc7v4KwoB3e2j5CkJe0kQg=",
+  "Source": "wuav-api",
+  "BasePath": "_content/wuav-api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
