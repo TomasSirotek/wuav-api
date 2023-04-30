@@ -1,3 +1,5 @@
+using wuav_api;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,11 +17,33 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+ 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+var summaries = new[]
+{
+    "Freezing", "Bracing"
+};
 
-app.MapControllers();
+app.MapGet("/weatherforecast", () =>
+{
+    var foreCast = Enumerable
+        .Range(1, 6)
+        .Select(index => new WeatherForecast(
+            DateTime.Now.AddDays(index),
+            Random.Shared.Next(-20, 55),
+            summaries[Random.Shared.Next(summaries.Length)]
+        ))
+        .ToArray();
+    return foreCast;
+}).WithName("GetWeatherForecast").WithOpenApi();
 
 app.Run();
+
+
+internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
+{
+    public int TemperatureF => 32 * (int)(TemperatureC / 0.5556);
+}
+
+
