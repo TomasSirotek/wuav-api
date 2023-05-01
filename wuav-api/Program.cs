@@ -1,13 +1,27 @@
-using wuav_api;
+using DotNetEnv.Configuration;
+using wuav_api.Configuration;
+using wuav_api.Identity;
+using wuav_api.Services.Interface;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+
+DotNetEnv.Env.Load();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.RegisterServices();
+builder.Configuration.AddDotNetEnv();
+
+
+
 
 var app = builder.Build();
 
@@ -17,33 +31,55 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
- 
-app.UseHttpsRedirection();
 
-var summaries = new[]
+// USERS 
+//  => /users 
+app.MapGet("/users", async (IUserService userService) =>
 {
-    "Freezing", "Bracing"
-};
+    List<AppUser> userList = await userService.GetAllUsersAsync();
+    Console.WriteLine("FROM CONTROLELR " + userList[0].name);
+    if (userList.Count == 0)
+        return Results.BadRequest($"Could not find any users");
+    return Results.Json(userList);
+});
 
-app.MapGet("/weatherforecast", () =>
+// => /userByEmail
+
+// => /userById
+// has to be an int to retrive 
+
+app.MapGet("/users/{id}",(int id) =>
 {
-    var foreCast = Enumerable
-        .Range(1, 6)
-        .Select(index => new WeatherForecast(
-            DateTime.Now.AddDays(index),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return foreCast;
-}).WithName("GetWeatherForecast").WithOpenApi();
+    return "Hello world";
+});
 
+
+
+
+// AUTHENTICATE 
+// => authenticate 
+
+// ROLE 
+// => /role
+// => /roleById
+// => /roleByName
+
+// PROJECTS 
+// => /projects 
+// => /projectByUserId
+// => /getProjectById 
+
+// => /uploadImage
+
+
+
+    
+    
+
+
+// app.UseHttpsRedirection();
 app.Run();
 
 
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 * (int)(TemperatureC / 0.5556);
-}
 
 
