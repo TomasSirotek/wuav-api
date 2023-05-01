@@ -1,8 +1,8 @@
 using wuav_api.Domain.Model;
 
-namespace wuav_api.Infrastructure.Repository.Interface;
+namespace wuav_api.Services.Interface;
 
-public interface IProjectRepository
+public interface IProjectService
 {
     Task<Project> GetAllProjectsByUserIdAsync(string userId);
 }
