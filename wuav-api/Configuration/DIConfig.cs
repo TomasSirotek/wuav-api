@@ -1,3 +1,4 @@
+using Azure.Storage.Blobs;
 using wuav_api.Infrastructure;
 using wuav_api.Infrastructure.Repository;
 using wuav_api.Infrastructure.Repository.Interface;
@@ -15,6 +16,8 @@ namespace wuav_api.Configuration{
             //  services.AddTransient<IStartupFilter, DatabaseExtension>();
             //  services.AddTransient<DbCustomLogger<DatabaseExtension>>();
             // User DI
+            services.AddSingleton(x => new BlobServiceClient(Environment.GetEnvironmentVariable("AzureBlobStorage")));
+            services.AddTransient<IBlobRepository, BlobRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();
             // User DI
