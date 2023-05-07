@@ -6149,19 +6149,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/legind/.nuget/packages/": {}
+    "/Users/simko/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/legind/Desktop/wuav/wuav-api/wuav-api/wuav-api/wuav-api.csproj",
+      "projectUniqueName": "/Users/simko/Desktop/wuav/wuav-api/wuav-api/wuav-api/wuav-api.csproj",
       "projectName": "wuav-api",
-      "projectPath": "/Users/legind/Desktop/wuav/wuav-api/wuav-api/wuav-api/wuav-api.csproj",
-      "packagesPath": "/Users/legind/.nuget/packages/",
-      "outputPath": "/Users/legind/Desktop/wuav/wuav-api/wuav-api/wuav-api/obj/",
+      "projectPath": "/Users/simko/Desktop/wuav/wuav-api/wuav-api/wuav-api/wuav-api.csproj",
+      "packagesPath": "/Users/simko/.nuget/packages/",
+      "outputPath": "/Users/simko/Desktop/wuav/wuav-api/wuav-api/wuav-api/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/legind/.nuget/NuGet/NuGet.Config"
+        "/Users/simko/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"

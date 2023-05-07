@@ -8,7 +8,6 @@ public class BlobRepository : IBlobRepository
     private readonly BlobServiceClient _blobServiceClient;
     private BlobContainerClient _client;
     
-    
     public BlobRepository(BlobServiceClient blobServiceClient)
     {
         _blobServiceClient = blobServiceClient;

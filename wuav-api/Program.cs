@@ -1,14 +1,8 @@
-using System.Net;
-using Azure.Storage.Blobs;
-using Dapper;
 using DotNetEnv.Configuration;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using wuav_api.Configuration;
-using wuav_api.Domain.Model;
 using wuav_api.Identity;
 using wuav_api.Identity.BindingModels;
-using wuav_api.Infrastructure.Repository.Interface;
 using wuav_api.Services.Interface;
 
 
@@ -92,49 +86,57 @@ app.MapGet("api/users/{id:int}", async (IUserService userService, int id) =>
 
 
 
-app.MapPost("api/users/{userId}/projects/{projectId}/images", async (IUserService userService, int userId, int projectId, IFormFile image, IBlobRepository blobRepository) =>
+Dictionary<int, List<string>> TempImages = new Dictionary<int, List<string>>(); // temp saving of the files sent from the swift ui app
+
+// THIS ENDPOINT IS FOR SWIFT UI TO UPLOAD IMAGES TO THE SERVER TEMP
+app.MapPost("api/users/{userId}/images", async (int userId, IFormFile image) =>
 {
-    Console.WriteLine($"Received image for user ID {userId} and project ID {projectId}:");
-
-    // Save the image to a temporary file
-    var tempFilePath = Path.GetTempFileName();
-    await using (var fileStream = new FileStream(tempFilePath, FileMode.Create))
+    using (var memoryStream = new MemoryStream())
     {
-        await image.CopyToAsync(fileStream);
+        await image.CopyToAsync(memoryStream);
+        var base64Image = Convert.ToBase64String(memoryStream.ToArray());
+        if (!TempImages.ContainsKey(userId))
+        {
+            TempImages[userId] = new List<string>();
+        }
+
+        TempImages[userId].Add(base64Image);
     }
-
-    Console.WriteLine($"Image size: {new FileInfo(tempFilePath).Length} bytes");
-    Console.WriteLine($"Image content type: {image.ContentType}");
-    Console.WriteLine($"Image file name: {image.FileName}");
-
-    // Upload the image to Azure Blob Storage
-   // var fileName = $"{userId}/{projectId}/{image.FileName}";
-   //  var blobUrl = await blobRepository.UploadFileAsync(fileName, tempFilePath);
-
-   // Console.WriteLine($"Image uploaded to Azure Blob Storage: {blobUrl}");
-
-    // Clean up the temporary file
-    File.Delete(tempFilePath);
-
     return Results.Ok();
 });
 
 
 
-// TODO : MAYBE LATER NOT NEEDED ATM 
-// ROLE 
-// => /role
-// => /roleById
-// => /roleByName
+// THIS ENDPOINT IS FOR DESKTOP APP UI TO DISPLAY THE IMAGES 
+app.MapGet("api/users/{userId}/temp-images", (int userId) =>
+{
+    if (TempImages.TryGetValue(userId, out var base64Images))
+    {
+        return Results.Json(base64Images);
+    }
+    else
+    {
+        return Results.NotFound("No images found for the given user ID");
+    }
+});
 
 
+// THIS ENDPOINT IS FOR DESKTOP APP UI TO DELETE THE IMAGES
+app.MapDelete("api/users/{userId}/temp-images", (int userId) =>
+{
+    if (TempImages.ContainsKey(userId))
+    {
+        TempImages.Remove(userId);
+        return Results.Ok("Images removed for the given user ID");
+    }
+    else
+    {
+        return Results.NotFound("No images found for the given user ID");
+    }
+});
 
-// => /uploadImage
 
-
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.Run();
-
-
 
 
