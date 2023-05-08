@@ -41,6 +41,9 @@ public class UserRepository : IUserRepository
         List<AppUser> appUsers = users.Distinct().ToList();
         return appUsers.Any() ? appUsers.ToList() : null!;
     }
+    
+    
+    
 
     public async Task<AppUser> GetUserByIdAsync(string id)
     {
