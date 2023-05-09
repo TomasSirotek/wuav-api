@@ -86,6 +86,7 @@ app.MapGet("api/users/{id:int}", async (IUserService userService, int id) =>
 
 
 
+
 Dictionary<int, List<string>> TempImages = new Dictionary<int, List<string>>(); // temp saving of the files sent from the swift ui app
 
 // THIS ENDPOINT IS FOR SWIFT UI TO UPLOAD IMAGES TO THE SERVER TEMP
