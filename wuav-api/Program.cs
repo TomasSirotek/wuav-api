@@ -8,8 +8,6 @@ using wuav_api.Services.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -25,7 +23,6 @@ DotNetEnv.Env.Load();
 var app = builder.Build();
 app.UseCors("AllowOrigin");
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -34,6 +31,7 @@ if (app.Environment.IsDevelopment())
 }
 
 
+Dictionary<int, List<string>> TempImages = new Dictionary<int, List<string>>(); // temp saving of the files sent from the swift ui app
 
 // AUTHENTICATE 
 // => authenticate 
@@ -48,12 +46,7 @@ app.MapPost("api/authenticate", async (IUserService userService,[FromBody]  Auth
     return Results.Ok(user);
 }).WithName("Authenticate");
 
-
-
-
-
 // USERS 
-// getting users with they roles 
 //  => /users 
 app.MapGet("api/users", async (IUserService userService) =>
 { 
@@ -74,8 +67,6 @@ app.MapGet("api/users/{email}", async (IUserService userService, string email) =
 }).WithName("GetUserByEmail");
 
 // => /userById
-// has to be an int to retrive 
-
 app.MapGet("api/users/{id:int}", async (IUserService userService, int id) =>
 {
     AppUser user = await userService.GetUserByIdAsync(id.ToString());
@@ -83,11 +74,6 @@ app.MapGet("api/users/{id:int}", async (IUserService userService, int id) =>
         return Results.BadRequest($"Could not find user with id: {id}");
     return Results.Ok(user);
 }).WithName("GetUserById");
-
-
-
-
-Dictionary<int, List<string>> TempImages = new Dictionary<int, List<string>>(); // temp saving of the files sent from the swift ui app
 
 // THIS ENDPOINT IS FOR SWIFT UI TO UPLOAD IMAGES TO THE SERVER TEMP
 app.MapPost("api/users/{userId}/images", async (int userId, IFormFile image) =>
@@ -136,8 +122,6 @@ app.MapDelete("api/users/{userId}/temp-images", (int userId) =>
     }
 });
 
-
-//app.UseHttpsRedirection();
 app.Run();
 
 

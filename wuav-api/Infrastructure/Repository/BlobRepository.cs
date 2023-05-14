@@ -11,7 +11,7 @@ public class BlobRepository : IBlobRepository
     public BlobRepository(BlobServiceClient blobServiceClient)
     {
         _blobServiceClient = blobServiceClient;
-        _client = _blobServiceClient.GetBlobContainerClient("wuav-app");
+        _client = _blobServiceClient.GetBlobContainerClient("container");
     }
     
     public async Task<string> UploadFileAsync(string fileName, string filePath)

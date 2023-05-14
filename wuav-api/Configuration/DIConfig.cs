@@ -11,20 +11,11 @@ namespace wuav_api.Configuration{
     {
         public static void RegisterServices(this IServiceCollection services)
         {
-            // Server DI
-             services.AddScoped<SqlServerConnection>();
-            //  services.AddTransient<IStartupFilter, DatabaseExtension>();
-            //  services.AddTransient<DbCustomLogger<DatabaseExtension>>();
-            // User DI
+            services.AddScoped<SqlServerConnection>();
             services.AddSingleton(x => new BlobServiceClient(Environment.GetEnvironmentVariable("AzureBlobStorage")));
             services.AddTransient<IBlobRepository, BlobRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();
-            // User DI
-            //  services.AddTransient<IRoleRepository, RoleRepository>();
-            //  services.AddTransient<IRoleService, RoleService>();
-            // Token DI
-
         }
     }
 }
