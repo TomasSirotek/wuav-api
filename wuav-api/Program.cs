@@ -33,7 +33,6 @@ if (app.Environment.IsDevelopment())
 
 Dictionary<int, List<string>> TempImages = new Dictionary<int, List<string>>(); // temp saving of the files sent from the swift ui app
 
-// THIS ENDPOINT IS FOR SWIFT UI TO UPLOAD IMAGES TO THE SERVER TEMP
 app.MapPost("api/users/{userId}/images", async (int userId, IFormFile image) =>
 {
     using (var memoryStream = new MemoryStream())
@@ -50,9 +49,6 @@ app.MapPost("api/users/{userId}/images", async (int userId, IFormFile image) =>
     return Results.Ok();
 });
 
-
-
-// THIS ENDPOINT IS FOR DESKTOP APP UI TO DISPLAY THE IMAGES 
 app.MapGet("api/users/{userId}/temp-images", (int userId) =>
 {
     if (TempImages.TryGetValue(userId, out var base64Images))
@@ -65,8 +61,6 @@ app.MapGet("api/users/{userId}/temp-images", (int userId) =>
     }
 });
 
-
-// THIS ENDPOINT IS FOR DESKTOP APP UI TO DELETE THE IMAGES
 app.MapDelete("api/users/{userId}/temp-images", (int userId) =>
 {
     if (TempImages.ContainsKey(userId))
